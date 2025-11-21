@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio-Visual Synchrony Perception Experiment</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Demographics Form -->
+        <div id="demographics-screen" class="screen active">
+            <h1>Audio-Visual Synchrony Perception Study</h1>
+            <p>Welcome! This experiment studies how we perceive audio and visual stimuli occurring together or with delays.</p>
+
+            <form id="demographics-form">
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" name="age" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="gender" value="male" required> Male
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="female" required> Female
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="other" required> Other
+                        </label>
+                        <label>
+                            <input type="radio" name="gender" value="prefer-not-to-say" required> Prefer not to say
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Start Experiment</button>
+            </form>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructions-screen" class="screen">
+            <h1>Instructions</h1>
+            <p>In this experiment, you will see an image and hear a sound.</p>
+            <p>Sometimes they will occur at the same time, and sometimes the sound will be slightly delayed.</p>
+            <p><strong>Your task:</strong> Decide whether the image and sound appeared together or if there was a delay.</p>
+            <p>There will be 20 trials. Please focus and respond as accurately as possible.</p>
+            <button id="start-experiment-btn" class="btn">Begin Trials</button>
+        </div>
+
+        <!-- Experiment Screen -->
+        <div id="experiment-screen" class="screen">
+            <div id="trial-info">
+                <p>Trial <span id="current-trial">1</span> of <span id="total-trials">20</span></p>
+            </div>
+
+            <div id="stimulus-container">
+                <img id="stimulus-image" src="" alt="Stimulus">
+            </div>
+
+            <div id="response-container" class="hidden">
+                <p>Did the image and sound occur together or was there a delay?</p>
+                <div class="button-group">
+                    <button class="btn response-btn" data-response="together">Together</button>
+                    <button class="btn response-btn" data-response="delay">Delay</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completion-screen" class="screen">
+            <h1>Thank You!</h1>
+            <p>The experiment is complete. Thank you for your participation!</p>
+            <div id="results-summary"></div>
+            <button id="restart-btn" class="btn">Start New Session</button>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="experiment.js"></script>
+</body>
+</html>
