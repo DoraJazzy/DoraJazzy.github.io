@@ -182,3 +182,77 @@ input[type="number"]:focus {
     color: #333;
     font-weight: bold;
 }
+
+/* Questionnaire Styles */
+.question-scale {
+    background: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.question-scale span {
+    font-size: 14px;
+    color: #666;
+    font-weight: bold;
+}
+
+.question-group {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.question-text {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.radio-group-horizontal {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.radio-group-horizontal label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s;
+}
+
+.radio-group-horizontal label:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.radio-group-horizontal input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.radio-group-horizontal input[type="radio"]:checked + label,
+.radio-group-horizontal label:has(input[type="radio"]:checked) {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);
+    font-weight: bold;
+}
+
+#questionnaire-screen {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+#questionnaire-form {
+    padding-right: 10px;
+}

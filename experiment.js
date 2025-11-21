@@ -28,10 +28,12 @@ function playBeep() {
 
 // DOM Elements
 const demographicsScreen = document.getElementById('demographics-screen');
+const questionnaireScreen = document.getElementById('questionnaire-screen');
 const instructionsScreen = document.getElementById('instructions-screen');
 const experimentScreen = document.getElementById('experiment-screen');
 const completionScreen = document.getElementById('completion-screen');
 const demographicsForm = document.getElementById('demographics-form');
+const questionnaireForm = document.getElementById('questionnaire-form');
 const startExperimentBtn = document.getElementById('start-experiment-btn');
 const stimulusImage = document.getElementById('stimulus-image');
 const responseContainer = document.getElementById('response-container');
@@ -65,7 +67,36 @@ demographicsForm.addEventListener('submit', async (e) => {
         participantId = 'offline-' + Date.now();
     }
 
-    // Switch to instructions regardless of save success
+    // Switch to questionnaire
+    switchScreen(questionnaireScreen);
+});
+
+// Submit questionnaire
+questionnaireForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Collect all 18 answers
+    const answers = [];
+    for (let i = 1; i <= 18; i++) {
+        const answer = parseInt(document.querySelector(`input[name="q${i}"]:checked`).value);
+        answers.push(answer);
+    }
+
+    // Try to save questionnaire to backend
+    try {
+        await fetch(`${API_BASE_URL}/api/questionnaire`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                participantId,
+                answers
+            })
+        });
+    } catch (error) {
+        console.warn('Backend not available. Questionnaire not saved:', error);
+    }
+
+    // Switch to instructions
     switchScreen(instructionsScreen);
 });
 
@@ -202,6 +233,7 @@ restartBtn.addEventListener('click', () => {
     trials = [];
     responses = [];
     demographicsForm.reset();
+    questionnaireForm.reset();
     switchScreen(demographicsScreen);
 });
 
