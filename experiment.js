@@ -5,6 +5,11 @@ let totalTrials = 20;
 let trials = [];
 let responses = [];
 
+// Mouse tracking variables
+let mouseTrackingData = [];
+let responseStartTime = null;
+let isTrackingMouse = false;
+
 // Audio context for generating beep sound
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -35,6 +40,7 @@ const completionScreen = document.getElementById('completion-screen');
 const demographicsForm = document.getElementById('demographics-form');
 const questionnaireForm = document.getElementById('questionnaire-form');
 const startExperimentBtn = document.getElementById('start-experiment-btn');
+const fixationCross = document.getElementById('fixation-cross');
 const stimulusImage = document.getElementById('stimulus-image');
 const responseContainer = document.getElementById('response-container');
 const responseBtns = document.querySelectorAll('.response-btn');
@@ -44,6 +50,33 @@ const restartBtn = document.getElementById('restart-btn');
 
 // Initialize
 totalTrialsSpan.textContent = totalTrials;
+
+// Mouse tracking functions
+function startMouseTracking() {
+    mouseTrackingData = [];
+    responseStartTime = Date.now();
+    isTrackingMouse = true;
+}
+
+function stopMouseTracking() {
+    isTrackingMouse = false;
+}
+
+function trackMousePosition(e) {
+    if (!isTrackingMouse) return;
+    
+    const currentTime = Date.now();
+    const elapsedTime = currentTime - responseStartTime;
+    
+    mouseTrackingData.push({
+        x: e.clientX,
+        y: e.clientY,
+        timestamp: elapsedTime
+    });
+}
+
+// Add mouse tracking event listener to experiment screen
+experimentScreen.addEventListener('mousemove', trackMousePosition);
 
 // Submit demographics
 demographicsForm.addEventListener('submit', async (e) => {
@@ -110,19 +143,28 @@ startExperimentBtn.addEventListener('click', () => {
 // Generate trial sequence
 function generateTrials() {
     trials = [];
+    
+    // SOA list: negative = beep first, positive = image first, 0 = simultaneous
+    const soa_list = [300, -100, 100, -125, -10, 75, 125, 250, -75, 50, 200, 10, -250, 30, -200, 150, -50, -30, -300, -150];
 
-    for (let i = 0; i < totalTrials; i++) {
-        // Randomly decide if there's a delay
-        const hasDelay = Math.random() > 0.5;
-
-        // If there's a delay, it's between 50-100ms
-        // If no delay, it's 0ms
-        const delayMs = hasDelay ? Math.floor(Math.random() * 51) + 50 : 0;
+    for (let i = 0; i < soa_list.length; i++) {
+        const soa = soa_list[i];
+        
+        // Negative SOA = beep first, positive SOA = image first
+        const beepFirst = soa < 0;
+        
+        // Absolute value is the delay in ms
+        const delayMs = Math.abs(soa);
+        
+        // Has delay if SOA is not 0
+        const hadDelay = soa !== 0;
 
         trials.push({
             trialNumber: i + 1,
+            soa: soa,
             delayMs: delayMs,
-            hadDelay: hasDelay,
+            hadDelay: hadDelay,
+            beepFirst: beepFirst,
             imagePath: 'assets/images/stimulus.svg'
         });
     }
@@ -141,23 +183,38 @@ async function runTrial() {
     const trial = trials[currentTrial];
     currentTrialSpan.textContent = currentTrial + 1;
 
-    // Hide response buttons
+    // Hide response buttons and stimulus
     responseContainer.classList.add('hidden');
     stimulusImage.classList.remove('show');
+    fixationCross.classList.add('hidden');
 
-    // Wait 1 second before presenting stimulus
+    // Show fixation cross
+    fixationCross.classList.remove('hidden');
     await sleep(1000);
+
+    // Hide fixation cross
+    fixationCross.classList.add('hidden');
 
     // Present stimulus
     stimulusImage.src = trial.imagePath;
 
-    // Show image
-    stimulusImage.classList.add('show');
-
-    // Play sound with delay (using Web Audio API beep)
-    setTimeout(() => {
+    if (trial.beepFirst) {
+        // Beep-first trial: play beep, then show image with delay
         playBeep();
-    }, trial.delayMs);
+        
+        // Show image with delay
+        setTimeout(() => {
+            stimulusImage.classList.add('show');
+        }, trial.delayMs);
+    } else {
+        // Image-first trial: show image, then play beep with delay
+        stimulusImage.classList.add('show');
+        
+        // Play sound with delay
+        setTimeout(() => {
+            playBeep();
+        }, trial.delayMs);
+    }
 
     // Wait for stimulus to finish (image shows for 200ms)
     await sleep(500);
@@ -168,15 +225,22 @@ async function runTrial() {
     // Wait a bit before showing response options
     await sleep(500);
 
-    // Show response options
+    // Show response options and start mouse tracking
     responseContainer.classList.remove('hidden');
+    startMouseTracking();
 }
 
 // Handle response
 responseBtns.forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
         const userResponse = btn.dataset.response;
         const trial = trials[currentTrial];
+        
+        // Stop mouse tracking and calculate reaction time
+        stopMouseTracking();
+        const reactionTimeMs = Date.now() - responseStartTime;
+        const finalMouseX = e.clientX;
+        const finalMouseY = e.clientY;
 
         // Calculate correctness locally
         const correct = (trial.hadDelay && userResponse === 'delay') || (!trial.hadDelay && userResponse === 'together');
@@ -189,9 +253,15 @@ responseBtns.forEach(btn => {
                 body: JSON.stringify({
                     participantId,
                     trialNumber: trial.trialNumber,
+                    soa: trial.soa,
                     delayMs: trial.delayMs,
                     hadDelay: trial.hadDelay,
-                    userResponse
+                    beepFirst: trial.beepFirst,
+                    userResponse,
+                    reactionTimeMs: reactionTimeMs,
+                    finalMouseX: finalMouseX,
+                    finalMouseY: finalMouseY,
+                    mouseTrajectory: mouseTrackingData
                 })
             });
         } catch (error) {
@@ -202,7 +272,11 @@ responseBtns.forEach(btn => {
         responses.push({
             ...trial,
             userResponse,
-            correct
+            correct,
+            reactionTimeMs: reactionTimeMs,
+            finalMouseX: finalMouseX,
+            finalMouseY: finalMouseY,
+            mouseTrajectory: mouseTrackingData.length
         });
 
         // Move to next trial

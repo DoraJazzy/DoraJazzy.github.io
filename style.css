@@ -134,6 +134,15 @@ input[type="number"]:focus {
     align-items: center;
     min-height: 300px;
     margin-bottom: 30px;
+    position: relative;
+}
+
+#fixation-cross {
+    position: absolute;
+    font-size: 48px;
+    color: #333;
+    font-weight: bold;
+    user-select: none;
 }
 
 #stimulus-image {
