@@ -42,6 +42,8 @@ const questionnaireForm = document.getElementById('questionnaire-form');
 const startExperimentBtn = document.getElementById('start-experiment-btn');
 const fixationCross = document.getElementById('fixation-cross');
 const stimulusImage = document.getElementById('stimulus-image');
+const answerButtonContainer = document.getElementById('answer-button-container');
+const answerBtn = document.getElementById('answer-btn');
 const responseContainer = document.getElementById('response-container');
 const responseBtns = document.querySelectorAll('.response-btn');
 const currentTrialSpan = document.getElementById('current-trial');
@@ -77,6 +79,16 @@ function trackMousePosition(e) {
 
 // Add mouse tracking event listener to experiment screen
 experimentScreen.addEventListener('mousemove', trackMousePosition);
+
+// Handle answer button click
+answerBtn.addEventListener('click', () => {
+    // Hide answer button
+    answerButtonContainer.classList.add('hidden');
+    
+    // Show response options and start mouse tracking
+    responseContainer.classList.remove('hidden');
+    startMouseTracking();
+});
 
 // Submit demographics
 demographicsForm.addEventListener('submit', async (e) => {
@@ -183,8 +195,9 @@ async function runTrial() {
     const trial = trials[currentTrial];
     currentTrialSpan.textContent = currentTrial + 1;
 
-    // Hide response buttons and stimulus
+    // Hide all interactive elements
     responseContainer.classList.add('hidden');
+    answerButtonContainer.classList.add('hidden');
     stimulusImage.classList.remove('show');
     fixationCross.classList.add('hidden');
 
@@ -222,12 +235,11 @@ async function runTrial() {
     // Hide image
     stimulusImage.classList.remove('show');
 
-    // Wait a bit before showing response options
+    // Wait a bit before showing answer button
     await sleep(500);
 
-    // Show response options and start mouse tracking
-    responseContainer.classList.remove('hidden');
-    startMouseTracking();
+    // Show answer button (no mouse tracking yet)
+    answerButtonContainer.classList.remove('hidden');
 }
 
 // Handle response
