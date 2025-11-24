@@ -143,6 +143,7 @@ input[type="number"]:focus {
     color: #333;
     font-weight: bold;
     user-select: none;
+    z-index: 10;
 }
 
 #stimulus-image {
@@ -150,6 +151,8 @@ input[type="number"]:focus {
     max-height: 300px;
     opacity: 0;
     transition: opacity 0.1s;
+    position: relative;
+    z-index: 5;
 }
 
 #stimulus-image.show {

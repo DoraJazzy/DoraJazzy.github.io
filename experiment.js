@@ -192,14 +192,14 @@ async function runTrial() {
     fixationCross.classList.remove('hidden');
     await sleep(1000);
 
-    // Hide fixation cross
+    // Hide fixation cross right before stimulus presentation
     fixationCross.classList.add('hidden');
 
-    // Present stimulus
+    // Present stimulus immediately after fixation disappears
     stimulusImage.src = trial.imagePath;
 
     if (trial.beepFirst) {
-        // Beep-first trial: play beep, then show image with delay
+        // Beep-first trial: play beep immediately, then show image with delay
         playBeep();
         
         // Show image with delay
@@ -207,7 +207,7 @@ async function runTrial() {
             stimulusImage.classList.add('show');
         }, trial.delayMs);
     } else {
-        // Image-first trial: show image, then play beep with delay
+        // Image-first trial: show image immediately, then play beep with delay
         stimulusImage.classList.add('show');
         
         // Play sound with delay
