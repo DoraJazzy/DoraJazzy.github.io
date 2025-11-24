@@ -160,12 +160,17 @@ input[type="number"]:focus {
 }
 
 #answer-button-container {
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
     margin-bottom: 30px;
 }
 
 #answer-btn {
-    max-width: 300px;
+    width: auto;
+    max-width: none;
+    min-width: 200px;
 }
 
 #response-container {
