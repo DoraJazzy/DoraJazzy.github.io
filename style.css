@@ -159,6 +159,7 @@ input[type="number"]:focus {
     opacity: 1;
 }
 
+#answer-button-container {
     text-align: center;
     margin-bottom: 30px;
 }
