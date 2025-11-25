@@ -8,10 +8,69 @@
 </head>
 <body>
     <div class="container">
+        <!-- Ethics Consent Screen -->
+        <div id="ethics-screen" class="screen active">
+            <h1>CONSENT TO THE PROCESSING OF PERSONAL DATA</h1>
+            
+            <div class="ethics-content">
+                <p><strong>Data controller student:</strong> Dóra Jázmin Szájer, Rita Nina Amoah</p>
+                
+                <p><strong>Title of assignment:</strong> How is temporal binding affected by attentional differences between ADHD and neurotypical young adults?</p>
+                
+                <p><strong>Supervisors of the assignment:</strong> Murillo Pagnotta, Eva Quiring</p>
+                
+                <h2>Description of the project</h2>
+                <p>This study examines the difference between how neurotypical and neurodivergent people perceive the timing between a flash and a beep, and how their mouse movements reflect these judgments. Participants will complete a short ADHD-trait questionnaire, followed by a simple computer task.</p>
+                
+                <p>Data collected includes an anonymous participant ID, age, gender, questionnaire responses, reaction times, and mouse movement data. The data will be used only for research in the Perception and Action course at Aarhus University and will be stored and analyzed anonymously.</p>
+                
+                <p>The following symptom checklist does not provide a medical diagnosis. Participation is completely voluntary, and participants have the right to abandon the study at any time without providing a reason.</p>
+                
+                <h2>I hereby consent to:</h2>
+                <ul>
+                    <li>The processing of my data in the assignment.</li>
+                    <li>My data may be disclosed to Aarhus University and to any external co-examiner in connection with supervision and assessment.</li>
+                    <li>My data may be published in anonymous form in connection with the publication of the project.</li>
+                </ul>
+                
+                <p><strong>Withdrawal of consent:</strong> The consent may be withdrawn at any time with future effect. Consent can be withdrawn via this email address: <a href="mailto:202409096@post.au.dk">202409096@post.au.dk</a> or <a href="mailto:202407523@post.au.dk">202407523@post.au.dk</a></p>
+                
+                <h2>Information to the data subject</h2>
+                <p>The student registers and processes personal data under the authority of Article 6(1) a) of the General Data Protection Regulation. Sensitive data such as health data or data concerning racial or ethnic origin, political, religious or philosophical beliefs or trade-union membership is registered and processed under the authority of Article 9(2) a) of the General Data Protection Regulation. Both articles of the Regulation give access to process data with the explicit content of the data subject.</p>
+                
+                <h2>Processing and storage</h2>
+                <p>The students will treat the personal data as confidential. The data will be stored until the assignment has been assessed and the deadline for complaints concerning the assessment has expired.</p>
+                
+                <h2>Disclosure of data</h2>
+                <p>The data will not be disclosed to any other party unless consent has been given.</p>
+                
+                <h2>Data access</h2>
+                <p>Data subjects may contact the student at any time in order to obtain a copy of the data.</p>
+                
+                <h2>Rectification of data</h2>
+                <p>If the data subject believes that incorrect data has been registered, the students can be asked to rectify the information. This means that the students must rectify the data or make a note that the data is incorrect and register the correct data. The data subject may require the students to disregard the data until it has been determined which data is correct.</p>
+                
+                <h2>Revocation of consent and erasure of data</h2>
+                <p>If the students have obtained the consent of the data subject to process the data, the data subject may revoke this consent at any time. The students may therefore not continue to process the data after the consent has been withdrawn.</p>
+                
+                <p>The data subject has the right to the erasure of data which the students have registered concerning the data subject in question, if the data is no longer necessary for the purpose for which it was collected. The data must also be erased if the data subject withdraws consent to the processing, or if the data has been processed unlawfully by mistake. The data subject may not require the erasure of data that has been archived in accordance with the Danish Archives Act in Aarhus University's archive system.</p>
+                
+                <h2>Complaints to the Danish Data Protection Agency</h2>
+                <p>Data subjects may lodge complaints about the processing of the data to the Danish Data Protection Agency at: <a href="mailto:dt@datatilsynet.dk">dt@datatilsynet.dk</a>.</p>
+                
+                <p><strong>I hereby consent to the aforementioned students' processing of data concerning me in connection with their degree programme at Aarhus University. My personal data will be used in the aforementioned project.</strong></p>
+                
+                <button id="consent-btn" class="btn">Consent</button>
+            </div>
+        </div>
+
         <!-- Demographics Form -->
-        <div id="demographics-screen" class="screen active">
-            <h1>Audio-Visual Synchrony Perception Study</h1>
-            <p>Welcome! This experiment studies how we perceive audio and visual stimuli occurring together or with delays.</p>
+        <div id="demographics-screen" class="screen">
+            <h1>Audio-Visual Synchrony Perception in relation to ADHD</h1>
+            <p>Welcome! This experiment studies how we perceive audio and visual stimuli occurring together or with delays. 
+                First, you will be asked to fill out a self-reported measures questionnaire related to Attention Deficit Hyperactivity Disorder. 
+                Then, you will be tested on your audio-visual synchrony perception. 
+            </p>
 
             <form id="demographics-form">
                 <div class="form-group">
@@ -43,8 +102,9 @@
 
         <!-- Questionnaire Screen -->
         <div id="questionnaire-screen" class="screen">
-            <h1>ADHD Questionnaire (ASRS-v1.1)</h1>
-            <p>Please answer the questions below, rating yourself on each criterion. Answer based on how you have felt and conducted yourself in the past 6 months.</p>
+            <h1>Adult ADHD Self-Report Scale (ASRS-v1.1) Symptom Checklist</h1>
+            <p>Please answer the questions below, rating yourself on a scale of 1 through 5 on each of the criteria below. As you answer each
+question, click the box that best describes how you have felt and conducted yourself over the past 6 months.</p>
 
             <form id="questionnaire-form">
                 <div class="question-scale">
@@ -276,10 +336,9 @@
             <div id="stimulus-container">
                 <div id="fixation-cross" class="hidden">+</div>
                 <img id="stimulus-image" src="" alt="Stimulus">
-            </div>
-
-            <div id="answer-button-container" class="hidden">
-                <button id="answer-btn" class="btn">Answer</button>
+                <div id="answer-button-container" class="hidden">
+                    <button id="answer-btn" class="btn">Answer</button>
+                </div>
             </div>
 
             <div id="response-container" class="hidden">
@@ -296,7 +355,6 @@
             <h1>Thank You!</h1>
             <p>The experiment is complete. Thank you for your participation!</p>
             <div id="results-summary"></div>
-            <button id="restart-btn" class="btn">Start New Session</button>
         </div>
     </div>
 

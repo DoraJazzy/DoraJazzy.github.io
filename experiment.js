@@ -32,6 +32,8 @@ function playBeep() {
 }
 
 // DOM Elements
+const ethicsScreen = document.getElementById('ethics-screen');
+const consentBtn = document.getElementById('consent-btn');
 const demographicsScreen = document.getElementById('demographics-screen');
 const questionnaireScreen = document.getElementById('questionnaire-screen');
 const instructionsScreen = document.getElementById('instructions-screen');
@@ -48,7 +50,6 @@ const responseContainer = document.getElementById('response-container');
 const responseBtns = document.querySelectorAll('.response-btn');
 const currentTrialSpan = document.getElementById('current-trial');
 const totalTrialsSpan = document.getElementById('total-trials');
-const restartBtn = document.getElementById('restart-btn');
 
 // Initialize
 totalTrialsSpan.textContent = totalTrials;
@@ -79,6 +80,11 @@ function trackMousePosition(e) {
 
 // Add mouse tracking event listener to experiment screen
 experimentScreen.addEventListener('mousemove', trackMousePosition);
+
+// Handle consent button click
+consentBtn.addEventListener('click', () => {
+    switchScreen(demographicsScreen);
+});
 
 // Handle answer button click
 answerBtn.addEventListener('click', () => {
@@ -254,8 +260,8 @@ responseBtns.forEach(btn => {
         const finalMouseX = e.clientX;
         const finalMouseY = e.clientY;
 
-        // Calculate correctness locally
-        const correct = (trial.hadDelay && userResponse === 'delay') || (!trial.hadDelay && userResponse === 'together');
+        // Calculate correctness - all trials have delays, so "delay" response is correct
+        const correct = userResponse === 'delay';
 
         // Try to save response to backend
         try {
@@ -311,17 +317,6 @@ function showCompletion() {
 
     switchScreen(completionScreen);
 }
-
-// Restart experiment
-restartBtn.addEventListener('click', () => {
-    participantId = null;
-    currentTrial = 0;
-    trials = [];
-    responses = [];
-    demographicsForm.reset();
-    questionnaireForm.reset();
-    switchScreen(demographicsScreen);
-});
 
 // Utility functions
 function switchScreen(screen) {

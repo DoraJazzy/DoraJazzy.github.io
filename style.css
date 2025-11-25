@@ -49,10 +49,43 @@ h1 {
     font-size: 24px;
 }
 
+h2 {
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
 p {
     color: #666;
     margin-bottom: 15px;
     line-height: 1.6;
+}
+
+.ethics-content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.ethics-content ul {
+    margin: 15px 0;
+    padding-left: 25px;
+    color: #666;
+    line-height: 1.8;
+}
+
+.ethics-content li {
+    margin-bottom: 8px;
+}
+
+.ethics-content a {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.ethics-content a:hover {
+    text-decoration: underline;
 }
 
 .form-group {
@@ -160,11 +193,11 @@ input[type="number"]:focus {
 }
 
 #answer-button-container {
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 200px;
-    margin-bottom: 30px;
+    z-index: 10;
 }
 
 #answer-btn {
