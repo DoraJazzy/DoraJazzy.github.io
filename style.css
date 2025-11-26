@@ -194,16 +194,18 @@ input[type="number"]:focus {
 
 #answer-button-container {
     position: absolute;
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
     z-index: 10;
 }
 
 #answer-btn {
     width: auto;
     max-width: none;
-    min-width: 200px;
+    min-width: 100px;
 }
 
 #response-container {
@@ -218,11 +220,13 @@ input[type="number"]:focus {
 
 .button-group {
     display: flex;
-    gap: 15px;
+    gap: 100px;
+    justify-content: center;
 }
 
 .response-btn {
-    flex: 1;
+    width: 130px;
+    flex: none;
 }
 
 .hidden {
