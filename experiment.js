@@ -5,6 +5,10 @@ let totalTrials = 20;
 let trials = [];
 let responses = [];
 
+// Batch data collection
+let participantData = null;
+let questionnaireData = null;
+
 // Mouse tracking variables
 let mouseTrackingData = [];
 let responseStartTime = null;
@@ -54,6 +58,13 @@ const totalTrialsSpan = document.getElementById('total-trials');
 // Initialize
 totalTrialsSpan.textContent = totalTrials;
 
+// Function to generate random participant ID
+function generateParticipantId() {
+    const timestamp = Date.now();
+    const randomPart = Math.random().toString(36).substring(2, 9);
+    return `P-${timestamp}-${randomPart}`;
+}
+
 // Mouse tracking functions
 function startMouseTracking() {
     mouseTrackingData = [];
@@ -88,12 +99,12 @@ consentBtn.addEventListener('click', () => {
 
 // Handle answer button click
 answerBtn.addEventListener('click', () => {
-    // Hide answer button
+    // Hide next button
     answerButtonContainer.classList.add('hidden');
     
-    // Show response options and start mouse tracking
-    responseContainer.classList.remove('hidden');
-    startMouseTracking();
+    // Move to next trial
+    currentTrial++;
+    runTrial();
 });
 
 // Submit demographics
@@ -103,20 +114,16 @@ demographicsForm.addEventListener('submit', async (e) => {
     const age = document.getElementById('age').value;
     const gender = document.querySelector('input[name="gender"]:checked').value;
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/participant`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ age: parseInt(age), gender })
-        });
+    // Generate unique participant ID
+    participantId = generateParticipantId();
+    console.log('Generated Participant ID:', participantId);
 
-        const data = await response.json();
-        participantId = data.participantId;
-    } catch (error) {
-        console.warn('Backend not available. Running in offline mode. Data will not be saved.');
-        // Generate a mock participant ID for offline mode
-        participantId = 'offline-' + Date.now();
-    }
+    // Store participant data locally
+    participantData = {
+        participantId: participantId,
+        age: parseInt(age),
+        gender: gender
+    };
 
     // Switch to questionnaire
     switchScreen(questionnaireScreen);
@@ -133,19 +140,8 @@ questionnaireForm.addEventListener('submit', async (e) => {
         answers.push(answer);
     }
 
-    // Try to save questionnaire to backend
-    try {
-        await fetch(`${API_BASE_URL}/api/questionnaire`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                participantId,
-                answers
-            })
-        });
-    } catch (error) {
-        console.warn('Backend not available. Questionnaire not saved:', error);
-    }
+    // Store questionnaire data locally
+    questionnaireData = answers;
 
     // Switch to instructions
     switchScreen(instructionsScreen);
@@ -241,11 +237,12 @@ async function runTrial() {
     // Hide image
     stimulusImage.classList.remove('show');
 
-    // Wait a bit before showing answer button
+    // Wait a bit before showing response options
     await sleep(500);
 
-    // Show answer button (no mouse tracking yet)
-    answerButtonContainer.classList.remove('hidden');
+    // Show response options and start mouse tracking
+    responseContainer.classList.remove('hidden');
+    startMouseTracking();
 }
 
 // Handle response
@@ -263,43 +260,24 @@ responseBtns.forEach(btn => {
         // Calculate correctness - all trials have delays, so "delay" response is correct
         const correct = userResponse === 'delay';
 
-        // Try to save response to backend
-        try {
-            await fetch(`${API_BASE_URL}/api/response`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    participantId,
-                    trialNumber: trial.trialNumber,
-                    soa: trial.soa,
-                    delayMs: trial.delayMs,
-                    hadDelay: trial.hadDelay,
-                    beepFirst: trial.beepFirst,
-                    userResponse,
-                    reactionTimeMs: reactionTimeMs,
-                    finalMouseX: finalMouseX,
-                    finalMouseY: finalMouseY,
-                    mouseTrajectory: mouseTrackingData
-                })
-            });
-        } catch (error) {
-            console.warn('Backend not available. Response not saved:', error);
-        }
-
-        // Store response locally regardless of save success
+        // Store response locally with full mouse tracking data
         responses.push({
-            ...trial,
-            userResponse,
-            correct,
+            trialNumber: trial.trialNumber,
+            soa: trial.soa,
+            delayMs: trial.delayMs,
+            hadDelay: trial.hadDelay,
+            beepFirst: trial.beepFirst,
+            userResponse: userResponse,
+            correct: correct,
             reactionTimeMs: reactionTimeMs,
             finalMouseX: finalMouseX,
             finalMouseY: finalMouseY,
-            mouseTrajectory: mouseTrackingData.length
+            mouseTracking: mouseTrackingData.slice() // Store a copy of the array
         });
 
-        // Move to next trial
-        currentTrial++;
-        runTrial();
+        // Hide response container and show Next button
+        responseContainer.classList.add('hidden');
+        answerButtonContainer.classList.remove('hidden');
     });
 });
 
@@ -315,7 +293,31 @@ function showCompletion() {
         <p>Accuracy: ${accuracy}%</p>
     `;
 
+    // Send all data in batch
+    sendBatchData();
+
     switchScreen(completionScreen);
+}
+
+// Send all collected data to backend
+async function sendBatchData() {
+    const batchData = {
+        participant: participantData,
+        questionnaire: questionnaireData,
+        trials: responses
+    };
+
+    try {
+        await fetch(`${API_BASE_URL}/api/submit-batch`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(batchData)
+        });
+        console.log('Data successfully sent to backend');
+    } catch (error) {
+        console.warn('Backend not available. Data not saved:', error);
+        console.log('Local data:', batchData);
+    }
 }
 
 // Utility functions
