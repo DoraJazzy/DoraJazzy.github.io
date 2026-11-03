@@ -1,4 +1,4 @@
-# Audio-visual synchrony perception and ADHD — experiment
+# Audio-visual synchrony perception and ADHD - experiment
 
 A browser-based audiovisual temporal-order task. Participants see a shape and hear a tone separated by a stimulus-onset asynchrony, then judge whether the two events occurred together or with a delay.
 
