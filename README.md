@@ -11,12 +11,12 @@ Built for an exam project on the Perception and Action course, BSc Cognitive Sci
 
 Six screens, one at a time, with no way back:
 
-1. **Consent** — GDPR consent covering processing, storage, disclosure, access, rectification, revocation and complaints
-2. **Demographics** — age and gender
-3. **ASRS-v1.1** — the 18-item Adult ADHD Self-Report Scale, rated 1 (Never) to 5 (Always) over the past six months
+1. **Consent** - GDPR consent covering processing, storage, disclosure, access, rectification, revocation and complaints
+2. **Demographics** - age and gender
+3. **ASRS-v1.1** - the 18-item Adult ADHD Self-Report Scale, rated 1 (Never) to 5 (Always) over the past six months
 4. **Instructions**
 5. **20 trials**
-6. **Completion** — accuracy summary, and the point at which all data is transmitted
+6. **Completion** - accuracy summary, and the point at which all data is transmitted
 
 ## Trial structure
 
@@ -32,13 +32,13 @@ The two stimuli are a tone and an image, presented with one of 20 SOAs spanning 
 
 Negative means the beep leads, positive means the image leads. The sign is read off the SOA and the absolute value becomes the `setTimeout` delay for whichever stimulus comes second. Trial order is shuffled per participant.
 
-The tone is generated with the Web Audio API rather than played from a file — an 800 Hz sine oscillator with an exponential gain ramp over 100 ms — which avoids the load and decode latency an `<audio>` element would introduce.
+The tone is generated with the Web Audio API rather than played from a file - an 800 Hz sine oscillator with an exponential gain ramp over 100 ms - which avoids the load and decode latency an `<audio>` element would introduce.
 
 Participants answer **Together** or **Delay**.
 
 ## What gets recorded
 
-Per trial: the SOA, its absolute delay, which stimulus led, the response, correctness, reaction time from the appearance of the response buttons, the final mouse coordinates, and the **complete mouse trajectory** — every `mousemove` as `{x, y, timestamp}` relative to response onset.
+Per trial: the SOA, its absolute delay, which stimulus led, the response, correctness, reaction time from the appearance of the response buttons, the final mouse coordinates, and the **complete mouse trajectory** - every `mousemove` as `{x, y, timestamp}` relative to response onset.
 
 The trajectory is the reason the task is mouse-driven rather than keyboard-driven. It records not just what was chosen but how the choice unfolded, including hesitation and changes of direction.
 
@@ -62,7 +62,7 @@ The API base URL lives in `config.js`:
 const API_BASE_URL = 'https://experimentapi.alterlily.com'
 ```
 
-Set it to `http://localhost:3000` for local development. The backend is a separate service — see Credits.
+Set it to `http://localhost:3000` for local development. The backend is a separate service - see Credits.
 
 ## Running locally
 
@@ -91,5 +91,5 @@ The ASRS-v1.1 is a World Health Organization instrument; it is reproduced here f
 
 ## Credits
 
-- Front end, task logic and client-side data handling — (https://github.com/DoraJazzy)
-- Backend API — (https://github.com/TheHeliPilot)
+- Front end, task logic and client-side data handling - (https://github.com/DoraJazzy)
+- Backend API - (https://github.com/TheHeliPilot)
